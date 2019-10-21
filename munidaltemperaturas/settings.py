@@ -121,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'core/static'
 
 CRONJOBS = [
     ('*/30 * * * *', 'core.cron.cron.my_scheduled_job', '>>/tmp/log-mundial.txt')

@@ -25,7 +25,7 @@ SECRET_KEY = 'a(b_8+0_=$6u2*^%^2&%n2$=&6c3^w1n=$4z62i@&cj9@i6o&8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['3.88.198.239', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'core',
     'daterangefilter',
     'django_crontab',
+    'rangefilter',
+    'django_object_actions',
 ]
 
 MIDDLEWARE = [
@@ -106,9 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Sao_Paulo'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -124,5 +126,5 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'core/static'
 
 CRONJOBS = [
-    ('*/30 * * * *', 'core.cron.cron.my_scheduled_job', '>>/tmp/log-mundial.txt')
+    ('*/10 * * * *', 'core.cron.cron.my_scheduled_job', '>>/tmp/log-mundial.txt')
 ]

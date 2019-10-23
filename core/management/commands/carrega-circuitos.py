@@ -17,12 +17,12 @@ class Command(BaseCommand):
 
 
 
-        with open('/tmp/email-test/EXPORT_1571619605683.csv', 'r') as csvFile:
+        with open('/tmp/email-test/EXPORT_1571776218333.csv', 'r') as csvFile:
             reader = csv.reader(csvFile, delimiter=';')
             count = 1
             for row in reader:
                 count += 1
-                if count == 7:
+                if count == 8:
                     circuitos = row
                     break
 

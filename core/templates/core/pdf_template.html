@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ obj.title }}</title>
+    <style>
+    body {
+      background-color: #f7f7f7;
+    }
+    p {
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .text-right {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+    <h1 class="text-right">Nº {{ obj.id }}</h1>
+    <p><b>Data Hora:</b> {{ obj.datahora }}</p>
+    <p><b>Temperatura:</b> {{ obj.temperatura}}</p>
+</body>
+</html>

@@ -2,10 +2,12 @@ import csv
 from core.models import Temperatura, Circuito
 import imaplib
 import email
+from datetime import datetime, timedelta
 
 def my_scheduled_job():
 
     def retorna_circuito_temperatura(arquivo):
+        datahora = ''
         temperaturas = []
         circuitos = []
         outputdir = '/tmp/email-test/'
@@ -15,14 +17,16 @@ def my_scheduled_job():
             count = 1
             for row in reader:
                 count += 1
-                if count == 7:
+                if count == 3:
+                    datahora = row[0]
+                if count == 8:
                     circuitos = row
                 if count == 9:
                     temperaturas = row
                     break
 
         csvFile.close()
-        return temperaturas, circuitos
+        return datahora, temperaturas, circuitos
 
     def email_ja_lido(email_id):
         temperatura = Temperatura.objects.filter(id_email=email_id)
@@ -85,6 +89,53 @@ def my_scheduled_job():
                 filename = downloaAttachmentsInEmail(mail, ultimo_mail_id, outputdir)
                 return count, filename
 
+    def esta_em_degelo(temperatura):
+        tempo_degelo = temperatura.circuito.tempo_degelo
+        hora_circuito = temperatura.datahora.time()
+
+        faixa1 = temperatura.circuito.faixa1
+        faixa2 = temperatura.circuito.faixa2
+        faixa3 = temperatura.circuito.faixa3
+        faixa4 = temperatura.circuito.faixa4
+        faixa5 = temperatura.circuito.faixa5
+        faixa6 = temperatura.circuito.faixa6
+        faixa7 = temperatura.circuito.faixa7
+        faixa8 = temperatura.circuito.faixa8
+
+        if faixa1 != None and (hora_circuito > faixa1 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa1)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa2 != None and (hora_circuito > faixa2 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa2)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa3 != None and (hora_circuito > faixa3 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa3)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa4 != None and (hora_circuito > faixa4 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa4)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa5 != None and (hora_circuito > faixa5 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa5)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa6 != None and (hora_circuito > faixa6 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa6)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa7 != None and (hora_circuito > faixa7 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa7)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        elif faixa8 != None and (hora_circuito > faixa8 and hora_circuito < (
+                (datetime.combine(datetime.today(), temperatura.circuito.faixa8)) + timedelta(0, (
+                tempo_degelo * 60))).time()):
+            return True
+        else:
+            return False
 
     email_id, filename = ler_email()
     # print(email_id)
@@ -93,7 +144,7 @@ def my_scheduled_job():
 
     if not email_ja_lido(email_id):
 
-        temperaturas, circuitos = retorna_circuito_temperatura(filename)
+        datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
 
         #print('entrou na funcao email_ja_lido')
 
@@ -108,6 +159,11 @@ def my_scheduled_job():
                 circuito = Circuito.objects.get(posicao_coluna=idx)
                 temperatura.circuito = circuito
                 temperatura.arquivo = filename
+                temperatura.datahora = datetime.strptime(datahora, '%Y-%m-%d %H:%M')
+                if esta_em_degelo(temperatura):
+                    temperatura.degelo = False
+                else:
+                    temperatura.degelo = True
                 temperatura.save()
                 #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
     else:

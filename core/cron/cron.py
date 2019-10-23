@@ -167,6 +167,6 @@ def my_scheduled_job():
                 temperatura.save()
                 #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
     else:
-        print('email de id: ' + str(email_id) + ' já lido')
+        print('email de id: ' + str(email_id) + ' ja lido')
 
 print('Job finalizado Django crontab')

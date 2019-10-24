@@ -10,6 +10,7 @@ django-daterangefilter==1.0.0
 django-object-actions==1.1.0
 html5lib==1.0.1
 numpy==1.17.3
+openpyxl==3.0.0
 pandas==0.25.1
 Pillow==6.2.1
 pycparser==2.19

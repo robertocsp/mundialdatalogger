@@ -9,7 +9,7 @@ import csv
 
 @admin.register(models.Temperatura)
 class TemperaturaAdmin(admin.ModelAdmin):
-    list_display = ('datahora', 'temperatura', 'degelo', 'em_conformidade', 'circuito', 'arquivo', 'id_email')
+    list_display = ('datahora', 'temperatura', 'degelo', 'em_conformidade', 'circuito',)
     list_filter = [
  #       ('datahora', PastDateRangeFilter),
         ('datahora', DateRangeFilter),

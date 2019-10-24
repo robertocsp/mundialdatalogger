@@ -125,6 +125,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'core/static'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1003
+
 CRONJOBS = [
     ('*/10 * * * *', 'core.cron.cron.my_scheduled_job', '>>/tmp/log-mundial.txt')
 ]

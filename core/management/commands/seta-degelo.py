@@ -46,5 +46,9 @@ class Command(BaseCommand):
             else:
                 return False
 
-        temperatura = Temperatura.objects.get(id=295)
-        print(esta_em_degelo(temperatura))
+        temperaturas = Temperatura.objects.all()
+        for t in temperaturas:
+            if esta_em_degelo(t):
+                t.degelo = False
+                t.save()
+

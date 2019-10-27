@@ -5,6 +5,10 @@ from django.core.exceptions import TooManyFieldsSent
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.deprecation import MiddlewareMixin
 from openpyxl import Workbook
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
 from . import models
 #from daterangefilter.filters import PastDateRangeFilter, FutureDateRangeFilter
@@ -26,7 +30,7 @@ class TemperaturaAdmin(admin.ModelAdmin):
 
     # list_per_page = sys.maxsize
     list_per_page = 999
-    actions = ['table_to_html', 'export_excel']
+    actions = ['table_to_html', 'export_excel', 'export_pdf']
 
     def circuito(self, instance):
         return instance.circuito.nome
@@ -80,7 +84,7 @@ class TemperaturaAdmin(admin.ModelAdmin):
             row = [
                 item.datahora,
                 item.temperatura,
-                item.degelo,
+                'Não' if item.degelo else 'Sim',
                 item.em_conformidade,
                 item.circuito.nome,
             ]
@@ -95,6 +99,45 @@ class TemperaturaAdmin(admin.ModelAdmin):
         return response
 
     export_excel.short_description = "Exportar para Excel itens selecionados"
+
+    def export_pdf(self, request, queryset):
+        response = HttpResponse(
+            content_type='application/pdf',
+        )
+        response['Content-Disposition'] = 'attachment; filename={date}-temperaturas.pdf'.format(
+            date=datetime.datetime.now().strftime('%Y-%m-%d'),
+        )
+        styles = getSampleStyleSheet()
+        h1 = ParagraphStyle(name='Heading1',
+                            fontSize=14,
+                            leading=16)
+        elements = [Paragraph('Tabela de temperaturas:', h1),
+                    Spacer(1, 0.2 * inch)]
+        doc = SimpleDocTemplate(response)
+        data = [[Paragraph('Datahora', styles['Normal']),
+                 Paragraph('Temperatura', styles['Normal']),
+                 Paragraph('Degelo', styles['Normal']),
+                 Paragraph('Em conformidade', styles['Normal']),
+                 Paragraph('Circuito', styles['Normal'])]]
+        for item in queryset:
+            data.append([Paragraph(str(item.datahora), styles['Normal']),
+                         Paragraph(str(item.temperatura), styles['Normal']),
+                         Paragraph('Não' if item.degelo else 'Sim', styles['Normal']),
+                         Paragraph(str(item.em_conformidade), styles['Normal']),
+                         Paragraph(str(item.circuito.nome), styles['Normal'])])
+        t = Table(data)
+        t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.gray),
+                               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                               ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                               ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                               ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                               ]))
+        elements.append(t)
+        doc.build(elements)
+
+        return response
+
+    export_pdf.short_description = "Exportar para PDF itens selecionados"
 
 
 @admin.register(models.Circuito)

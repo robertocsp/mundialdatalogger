@@ -35,19 +35,6 @@ class TemperaturaAdmin(admin.ModelAdmin):
     def circuito(self, instance):
         return instance.circuito.nome
 
-    def table_to_html(self, request, queryset):
-
-        meta = self.model._meta
-        field_names = [field.name for field in meta.fields]
-        print(field_names)
-
-        for obj in queryset:
-            print(obj)
-
-        pass
-
-    table_to_html.short_description = "Imprimir itens selecionados"
-
     def export_excel(self, request, queryset):
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

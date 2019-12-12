@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 
 class Command(BaseCommand):
-    help = 'Carrega circuitos'
+    help = 'Carrega circuitos branch degelodefault'
 
     def add_arguments(self, parser):
         pass

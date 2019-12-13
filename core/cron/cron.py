@@ -162,6 +162,7 @@ def my_scheduled_job():
                 temperatura.datahora = datetime.strptime(datahora, '%Y-%m-%d %H:%M')
                 if esta_em_degelo(temperatura):
                     temperatura.degelo = False
+                    temperatura.temperatura = -18.0
                 else:
                     temperatura.degelo = True
                 temperatura.save()

@@ -21,6 +21,6 @@ urlpatterns = [
     path('core/', include('core.urls')),
 ]
 
-admin.site.site_header = "Mundial - Unidade Freguesia"
-admin.site.site_title = "Mundial - Unidade Freguesia"
-admin.site.index_title = "Mundial - Unidade Freguesia"
+admin.site.site_header = "Supermercados Mundial"
+admin.site.site_title = "Supermercados Mundial"
+admin.site.index_title = "Supermercados Mundial"

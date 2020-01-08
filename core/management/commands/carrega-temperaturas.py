@@ -171,10 +171,10 @@ class Command(BaseCommand):
                     temperatura.arquivo = filename
                     temperatura.datahora = datetime.strptime(datahora, '%Y-%m-%d %H:%M')
                     if esta_em_degelo(temperatura):
-                        temperatura.degelo = False
-                        temperatura.temperatura = -18.0
-                    else:
                         temperatura.degelo = True
+                        temperatura.temperatura = None
+                    else:
+                        temperatura.degelo = None
                     temperatura.save()
                     print(temperatura.datahora)
                     #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))

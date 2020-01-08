@@ -20,16 +20,17 @@ import csv
 
 @admin.register(models.Temperatura)
 class TemperaturaAdmin(admin.ModelAdmin):
-    list_display = ('datahora', 'temperatura', 'degelo', 'em_conformidade', 'circuito',)
+    list_display = ('datahora', 'temperatura', 'degelo', 'circuito',)
     list_filter = [
         # ('datahora', PastDateRangeFilter),
         ('datahora', DateRangeFilter),
         'circuito__nome',
 
     ]
+    change_list_template = 'admin/core/temperatura/core_change_list.html'
 
     # list_per_page = sys.maxsize
-    list_per_page = 999
+    list_per_page = 600
     actions = ['table_to_html', 'export_excel', 'export_pdf']
 
     def circuito(self, instance):
@@ -53,7 +54,6 @@ class TemperaturaAdmin(admin.ModelAdmin):
             'Datahora',
             'Temperatura',
             'Degelo',
-            'Em conformidade',
             'Circuito',
         ]
         row_num = 1
@@ -71,8 +71,7 @@ class TemperaturaAdmin(admin.ModelAdmin):
             row = [
                 item.datahora,
                 item.temperatura,
-                'Não' if item.degelo else 'Sim',
-                item.em_conformidade,
+                'Sim' if item.degelo else 'Não',
                 item.circuito.nome,
             ]
 
@@ -104,13 +103,11 @@ class TemperaturaAdmin(admin.ModelAdmin):
         data = [[Paragraph('Datahora', styles['Normal']),
                  Paragraph('Temperatura', styles['Normal']),
                  Paragraph('Degelo', styles['Normal']),
-                 Paragraph('Em conformidade', styles['Normal']),
                  Paragraph('Circuito', styles['Normal'])]]
         for item in queryset:
             data.append([Paragraph(str(item.datahora), styles['Normal']),
                          Paragraph(str(item.temperatura), styles['Normal']),
-                         Paragraph('Não' if item.degelo else 'Sim', styles['Normal']),
-                         Paragraph(str(item.em_conformidade), styles['Normal']),
+                         Paragraph('Sim' if item.degelo else 'Não', styles['Normal']),
                          Paragraph(str(item.circuito.nome), styles['Normal'])])
         t = Table(data)
         t.setStyle(TableStyle([('BACKGROUND', (0, 0), (5, 0), colors.gray),

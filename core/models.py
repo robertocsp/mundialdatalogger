@@ -13,6 +13,8 @@ class Conformidade(models.Model):
 
 #class AgendaDegelo(models.Mode):
 
+class AgrupamentoCircuitos(models.Model):
+    nome = models.CharField(max_length=255)
 
 class Circuito(models.Model):
     nome = models.CharField(max_length=255)
@@ -34,8 +36,8 @@ class Circuito(models.Model):
 
 class Temperatura(models.Model):
     datahora = models.DateTimeField(null=True, blank=True)
-    temperatura = models.FloatField()
-    degelo = models.BooleanField(default=True)
+    temperatura = models.FloatField(null=True, blank=True)
+    degelo = models.BooleanField(default=None, null=True, blank=True)
     circuito = models.ForeignKey(Circuito, on_delete=models.CASCADE)
     id_email = models.IntegerField(default=0)
     arquivo = models.CharField(max_length=255, null=True, blank=True)

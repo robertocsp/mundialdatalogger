@@ -15,3 +15,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
+print('entrou no homologa settings')

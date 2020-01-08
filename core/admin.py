@@ -30,7 +30,7 @@ class TemperaturaAdmin(admin.ModelAdmin):
     change_list_template = 'admin/core/temperatura/core_change_list.html'
 
     # list_per_page = sys.maxsize
-    list_per_page = 600
+    list_per_page = 999
     actions = ['table_to_html', 'export_excel', 'export_pdf']
 
     def circuito(self, instance):

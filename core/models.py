@@ -13,9 +13,6 @@ class Conformidade(models.Model):
 
 #class AgendaDegelo(models.Mode):
 
-class AgrupamentoCircuitos(models.Model):
-    nome = models.CharField(max_length=255)
-
 class Circuito(models.Model):
     nome = models.CharField(max_length=255)
     posicao_coluna = models.IntegerField(null=True, blank=True)

@@ -1,0 +1,5 @@
+Variáveis de ambiente devem ser criadas em produção e em homologação
+Produção: export PROJECT_PRODUCTION=True
+Homologação: export PROJECT_HOMOLOGA=True
+
+==========================

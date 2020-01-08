@@ -16,5 +16,4 @@ DATABASES = {
     }
 }
 
-
 print('entrou no homologa settings')

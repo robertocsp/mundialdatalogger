@@ -6,6 +6,13 @@ Homologação: export PROJECT_HOMOLOGA=True
 
 Setup do sistema:
 
+Gerar os circuitos:
 1) Criar a pasta em /tmp/email-test
-2) copiar o arquivo EXPORT_1578492012730.csv para /tmp/email-test
-3) rodar o comando python manage.py carrega-circuitos
+2) copiar o arquivo arquivos-setup/EXPORT_1578492012730.csv para /tmp/email-test
+3) Criar em conformidade resfriado e congelados
+4) rodar o comando python manage.py carrega-circuitos
+
+Setas as faixas dos circuitos, se estiver migrando banco
+5) caso as faixas tenham sido setadas manualmente, é necessário rodar o comando gera-faixas e depois seta-faixas, mudando no nome do arquivo
+   5.1) A unidade da freguesia já tem o seu arquivo, então tem que copiar o arquivos-setup/faixas-mdl20.csv para /tmp/faixas-mdl20.csv
+

@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand, CommandError
-import os
 import csv
 from core.models import Temperatura, Circuito
 import imaplib
@@ -157,13 +156,17 @@ class Command(BaseCommand):
         if not email_ja_lido(email_id):
 
             datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
+            print(temperaturas)
 
-            print('email não lido ainda')
+            print('email não lido ainda: ' + str(email_id))
             for idx, c in enumerate(temperaturas, start=1):
                 if (str(c).strip()) != '':
                     #print(str(c).replace(',', '.'))
                     temperatura = Temperatura()
-                    temperatura.temperatura = float(str(c).replace(',', '.'))
+                    try:
+                        temperatura.temperatura = float(str(c).replace(',', '.'))
+                    except:
+                        temperatura.temperatura = 0.00
                     temperatura.id_email = email_id
                     #circuito = Circuito.objects.filter(nome__contains=circuitos[idx]).first()
                     circuito = Circuito.objects.get(posicao_coluna=idx)

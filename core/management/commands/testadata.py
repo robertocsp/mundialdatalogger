@@ -2,7 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 import os
 import csv
 from core.models import Circuito
-import datetime
+from datetime import datetime
+from django.utils import timezone
 
 
 
@@ -13,4 +14,6 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        print(str(datetime.datetime.today()))
+        print('datetime nativo: ' + str(datetime.today()))
+        print('datetime timezone: ' + str(timezone.now()))
+        print('get Timezone nativo: ' + str(datetime.utcnow()))

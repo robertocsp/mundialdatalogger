@@ -47,8 +47,16 @@ class Command(BaseCommand):
                 return False
 
         temperaturas = Temperatura.objects.all()
+        count = 0
         for t in temperaturas:
+            count += 1
             if esta_em_degelo(t):
+                t.degelo = True
+                t.save()
+                print('setou degelo=True' + str(count))
+            else:
                 t.degelo = False
                 t.save()
+                print('setou degelo=True' + str(count))
+
 

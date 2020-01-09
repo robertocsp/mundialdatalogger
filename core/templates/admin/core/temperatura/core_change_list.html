@@ -5,7 +5,7 @@
 
         for(x = 0; x < fielddegelo.length; x++){
             //Verificar se degelo==None
-            if (fielddegelo[x].childNodes[0].getAttribute("alt") == "None"){
+            if ((fielddegelo[x].childNodes[0].getAttribute("alt") == "None") || (fielddegelo[x].childNodes[0].getAttribute("alt") == "False")){
                 fielddegelo[x].removeChild(fielddegelo[x].childNodes[0]);
             }
         }

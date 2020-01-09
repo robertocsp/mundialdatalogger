@@ -5,8 +5,8 @@ import email
 from datetime import datetime, timedelta
 
 def my_scheduled_job():
-
     def retorna_circuito_temperatura(arquivo):
+
         datahora = ''
         temperaturas = []
         circuitos = []
@@ -30,7 +30,6 @@ def my_scheduled_job():
 
     def email_ja_lido(email_id):
         temperatura = Temperatura.objects.filter(id_email=email_id)
-        #print('chegou na funcao email_ja_lido, resultado de exists: ' + str(temperatura.exists()))
         if temperatura.exists():
             return True
         else:
@@ -49,7 +48,6 @@ def my_scheduled_job():
             if part.get_content_maintype() != 'multipart' and part.get('Content-Disposition') is not None:
                 open(outputdir + '/' + part.get_filename(), 'wb').write(part.get_payload(decode=True))
                 return part.get_filename()
-
 
     def ler_email():
         FROM_EMAIL = "thermoguardian.ti@gmail.com"  # substitua <seuemail> pelo seu email.
@@ -138,6 +136,7 @@ def my_scheduled_job():
             return False
 
     email_id, filename = ler_email()
+    datahora = ''
     # print(email_id)
     # email_id_inteiro = int.from_bytes(email_id)
     #print('email_id: ' + str(email_id) + '  ---  ' + str(filename))
@@ -145,15 +144,17 @@ def my_scheduled_job():
     if not email_ja_lido(email_id):
 
         datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
+        #print(temperaturas)
 
-        #print('entrou na funcao email_ja_lido')
-
-        #print('email não lido ainda')
+        #print('email não lido ainda: ' + str(email_id))
         for idx, c in enumerate(temperaturas, start=1):
             if (str(c).strip()) != '':
                 # print(str(c).replace(',', '.'))
                 temperatura = Temperatura()
-                temperatura.temperatura = float(str(c).replace(',', '.'))
+                try:
+                    temperatura.temperatura = float(str(c).replace(',', '.'))
+                except:
+                    temperatura.temperatura = 0.00
                 temperatura.id_email = email_id
                 # circuito = Circuito.objects.filter(nome__contains=circuitos[idx]).first()
                 circuito = Circuito.objects.get(posicao_coluna=idx)
@@ -164,10 +165,8 @@ def my_scheduled_job():
                     temperatura.degelo = True
                     temperatura.temperatura = None
                 else:
-                    temperatura.degelo = False
+                    temperatura.degelo = None
                 temperatura.save()
-                #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
-    else:
-        print('email de id: ' + str(email_id) + ' ja lido')
-
-print('Job finalizado Django crontab')
+                #print(temperatura.datahora)
+                # print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
+    print('Job finalizado Django crontab')

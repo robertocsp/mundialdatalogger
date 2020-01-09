@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
 
 
-        with open('/tmp/email-test/EXPORT_1571776218333.csv', 'r') as csvFile:
+        with open('/tmp/email-test/EXPORT_1578492012730.csv', 'r') as csvFile:
             reader = csv.reader(csvFile, delimiter=';')
             count = 1
             for row in reader:

@@ -3,3 +3,9 @@ Produção: export PROJECT_PRODUCTION=True
 Homologação: export PROJECT_HOMOLOGA=True
 
 ==========================
+
+Setup do sistema:
+
+1) Criar a pasta em /tmp/email-test
+2) copiar o arquivo EXPORT_1578492012730.csv para /tmp/email-test
+3) rodar o comando python manage.py carrega-circuitos

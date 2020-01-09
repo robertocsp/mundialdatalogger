@@ -8,5 +8,5 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        DEBUG = os.environ.get('DJANGO_DEBUG', False)
+        DEBUG = os.environ.get('PROJECT_HOMOLOGA', False)
         print(str(DEBUG))

@@ -84,10 +84,10 @@ class Command(BaseCommand):
             #pega o ultimo email e guarda o "id" como count
             count = 1
             ultimo_mail_id = ''
-            #for i in mail_ids:
-            #    count += 1
-            #    ultimo_mail_id = i
-            ultimo_mail_id = mail_ids[0]
+            for i in mail_ids:
+                count += 1
+                ultimo_mail_id = i
+            #ultimo_mail_id = mail_ids[0]
             print(mail_ids)
 
             #print('ultimo_mail_id: ' + str(ultimo_mail_id))

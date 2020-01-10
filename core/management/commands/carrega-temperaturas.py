@@ -158,7 +158,7 @@ class Command(BaseCommand):
             datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
             print(temperaturas)
 
-            print('email não lido ainda: ' + str(email_id))
+            #print('email não lido ainda: ' + str(email_id))
             for idx, c in enumerate(temperaturas, start=1):
                 if (str(c).strip()) != '':
                     #print(str(c).replace(',', '.'))

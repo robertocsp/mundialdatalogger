@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 import os
+from django.core.management import call_command
 
 class Command(BaseCommand):
 
@@ -8,5 +9,4 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        DEBUG = os.environ.get('PROJECT_HOMOLOGA', False)
-        print(str(DEBUG))
+        call_command('testadata')

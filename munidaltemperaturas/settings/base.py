@@ -116,6 +116,6 @@ STATIC_ROOT = 'core/static'
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100300
 
 CRONJOBS = [
-    ('*/2 * * * *', 'core.cron.cron.my_scheduled_job', '>>/tmp/log-mundial.txt')
-    #('* * * * *', 'core.cron.cron-teste.my_scheduled_job', '>>/tmp/teste-log.txt'),
+    #('*/2 * * * *', 'core.cron.cron.my_scheduled_job', '>>/tmp/log-mundial.txt'),
+    ('* * * * *', 'core.cron.cron-teste.my_scheduled_job', '>>/tmp/teste-log.txt'),
 ]

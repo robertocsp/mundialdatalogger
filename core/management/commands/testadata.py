@@ -14,6 +14,4 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        print('datetime nativo: ' + str(datetime.today()))
-        print('datetime timezone: ' + str(timezone.now()))
-        print('get Timezone nativo: ' + str(datetime.utcnow()))
+        print(os.environ.get('TESTEENV'))

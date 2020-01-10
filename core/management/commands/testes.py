@@ -10,3 +10,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         call_command('testadata')
+        os.environ['TESTEENV'] = 'True'

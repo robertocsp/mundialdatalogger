@@ -148,6 +148,7 @@ def my_scheduled_job():
 
         #print('email não lido ainda: ' + str(email_id))
         for idx, c in enumerate(temperaturas, start=1):
+            print('entrou no for idx')
             if (str(c).strip()) != '':
                 # print(str(c).replace(',', '.'))
                 temperatura = Temperatura()
@@ -167,6 +168,7 @@ def my_scheduled_job():
                 else:
                     temperatura.degelo = None
                 temperatura.save()
+                print('salvou!!!')
                 #print(temperatura.datahora)
                 # print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
     print('Job finalizado Django crontab')

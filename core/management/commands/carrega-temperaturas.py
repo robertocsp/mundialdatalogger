@@ -166,7 +166,7 @@ class Command(BaseCommand):
                     try:
                         temperatura.temperatura = float(str(c).replace(',', '.'))
                     except:
-                        temperatura.temperatura = 0.00
+                        temperatura.temperatura = -999.99
                     temperatura.id_email = email_id
                     #circuito = Circuito.objects.filter(nome__contains=circuitos[idx]).first()
                     circuito = Circuito.objects.get(posicao_coluna=idx)

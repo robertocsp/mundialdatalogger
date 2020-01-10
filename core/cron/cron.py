@@ -51,7 +51,7 @@ def my_scheduled_job():
 
     def ler_email():
         FROM_EMAIL = "thermoguardian2.ti@gmail.com"  # substitua <seuemail> pelo seu email.
-        FROM_PWD = "zlwrfdbkzhahzzxu"  # substitua <suasenha> pela sua senha
+        FROM_PWD = "TRIBUS11"  # substitua <suasenha> pela sua senha
         SMTP_SERVER = "imap.gmail.com"  # padrão
         SMTP_PORT = 993  # padrão
         outputdir = '/tmp/email-test'

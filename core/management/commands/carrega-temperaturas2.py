@@ -60,8 +60,10 @@ class Command(BaseCommand):
 
 
         def ler_email():
-            FROM_EMAIL = "thermoguardian.ti@gmail.com"  # substitua <seuemail> pelo seu email.
-            FROM_PWD = "TRIBUS11"  # substitua <suasenha> pela sua senha
+            FROM_EMAIL = "thermoguardian2.ti@gmail.com"  # substitua <seuemail> pelo seu email.
+            FROM_PWD = "zlwrfdbkzhahzzxu"  # substitua <suasenha> pela sua senha
+            #FROM_EMAIL = "thermoguardian.ti@gmail.com"  # substitua <seuemail> pelo seu email.
+            #FROM_PWD = "TRIBUS11"  # substitua <suasenha> pela sua senha
             SMTP_SERVER = "imap.gmail.com"  # padrão
             SMTP_PORT = 993  # padrão
             outputdir = '/tmp/email-test'
@@ -82,9 +84,13 @@ class Command(BaseCommand):
             #pega o ultimo email e guarda o "id" como count
             count = 1
             ultimo_mail_id = ''
-            for i in mail_ids:
-                count += 1
-                ultimo_mail_id = i
+            #for i in mail_ids:
+            #    count += 1
+            #    ultimo_mail_id = i
+            ultimo_mail_id = mail_ids[0]
+            print(mail_ids)
+
+            #print('ultimo_mail_id: ' + str(ultimo_mail_id))
 
             # pega o último elemento
             #ultimo_mail_id = mail_ids[-1]
@@ -156,9 +162,9 @@ class Command(BaseCommand):
         if not email_ja_lido(email_id):
 
             datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
-            print(temperaturas)
+            #print(temperaturas)
 
-            print('email não lido ainda: ' + str(email_id))
+            #print('email não lido ainda: ' + str(email_id))
             for idx, c in enumerate(temperaturas, start=1):
                 if (str(c).strip()) != '':
                     #print(str(c).replace(',', '.'))
@@ -178,7 +184,7 @@ class Command(BaseCommand):
                         temperatura.temperatura = None
                     else:
                         temperatura.degelo = None
-                    temperatura.save()
+                    #temperatura.save()
                     print(temperatura.datahora)
                     #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
         else:

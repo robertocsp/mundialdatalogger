@@ -156,7 +156,7 @@ class Command(BaseCommand):
         if not email_ja_lido(email_id):
 
             datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
-            print(temperaturas)
+            #print(temperaturas)
 
             #print('email não lido ainda: ' + str(email_id))
             for idx, c in enumerate(temperaturas, start=1):
@@ -179,7 +179,7 @@ class Command(BaseCommand):
                     else:
                         temperatura.degelo = None
                     temperatura.save()
-                    print(temperatura.datahora)
+                    #print(temperatura.datahora)
                     #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
         else:
             print('email de id: ' + str(email_id) + ' já lido')

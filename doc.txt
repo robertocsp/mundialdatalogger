@@ -16,9 +16,9 @@ Gerar os circuitos:
 3) Criar em conformidade resfriado e congelados
 4) rodar o comando python manage.py carrega-circuitos
 
-Setas as faixas dos circuitos, se estiver migrando banco
+Setar as faixas dos circuitos, se estiver migrando banco
 5) caso as faixas tenham sido setadas manualmente, é necessário rodar o comando gera-faixas e depois seta-faixas, mudando no nome do arquivo
-   5.1) A unidade da freguesia já tem o seu arquivo, então tem que copiar o arquivos-setup/faixas-mdl20.csv para /tmp/faixas-mdl20.csv
+   5.1) A unidade da freguesia já tem o seu arquivo, então tem que copiar o arquivos-setup/faixas-mdl20.csv para /tmp/email-test/faixas-mdl20.csv
 
 ** EM HOMOLOGACAO OU PRODUCAO, na hora de rodar o cron deve-se copiar o p
 

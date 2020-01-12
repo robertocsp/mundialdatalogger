@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        outputdir = '/tmp/faixas-mdl20.csv'
+        outputdir = '/tmp/email-test/faixas-mdl20.csv'
 
         with open(outputdir, 'r',  encoding='utf-8') as csvFile:
             reader = csv.reader(csvFile, delimiter=';')
@@ -29,6 +29,7 @@ class Command(BaseCommand):
                 circuito.faixa7 = datetime.strptime(row[7], '%H:%M:%S') if row[7] != '' else None
                 circuito.faixa8 = datetime.strptime(row[8], '%H:%M:%S') if row[8] != '' else None
                 print(str(circuito.posicao_coluna) + '---' + str(circuito.faixa1))
+                #print(row[1])
                 circuito.tempo_degelo = 70
                 circuito.save()
         csvFile.close()

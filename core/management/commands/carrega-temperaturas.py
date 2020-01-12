@@ -18,7 +18,7 @@ class Command(BaseCommand):
             datahora = ''
             temperaturas = []
             circuitos = []
-            outputdir = '/tmp/email-test/'
+            outputdir = '/mdltemp/csvs/'
 
             with open(outputdir + arquivo, 'r', encoding='utf-8') as csvFile:
                 reader = csv.reader(csvFile, delimiter=';')

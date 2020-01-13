@@ -18,6 +18,8 @@ DATABASES = {
     }
 }
 
+OUTPUTDIR = '/home/ubuntu/mdltemp/'
+
 print('entrou no producao settings')
 
 

@@ -16,4 +16,6 @@ DATABASES = {
     }
 }
 
+OUTPUTDIR = '/home/ubuntu/mdltemp/'
+
 print('entrou no homologa settings')

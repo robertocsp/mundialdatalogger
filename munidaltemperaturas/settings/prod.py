@@ -5,7 +5,7 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['52.72.157.127', 'mldtemp.thermoguardian.com.br']
+ALLOWED_HOSTS = ['52.72.157.127', '.thermoguardian.com.br', ]
 
 DATABASES = {
     'default': {
@@ -17,6 +17,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+OUTPUTDIR = '/home/ubuntu/mdltemp/'
 
 print('entrou no producao settings')
 

@@ -4,6 +4,7 @@ from core.models import Temperatura, Circuito
 import imaplib
 import email
 from datetime import datetime, timedelta
+from django.conf import settings
 
 class Command(BaseCommand):
     help = 'Carrega Temperaturas'
@@ -18,7 +19,7 @@ class Command(BaseCommand):
             datahora = ''
             temperaturas = []
             circuitos = []
-            outputdir = '/tmp/email-test/'
+            outputdir = settings.OUTPUTDIR
 
             with open(outputdir + arquivo, 'r', encoding='utf-8') as csvFile:
                 reader = csv.reader(csvFile, delimiter=';')
@@ -55,7 +56,7 @@ class Command(BaseCommand):
                 return
             for part in mail.walk():
                 if part.get_content_maintype() != 'multipart' and part.get('Content-Disposition') is not None:
-                    open(outputdir + '/' + part.get_filename(), 'wb').write(part.get_payload(decode=True))
+                    open(outputdir + part.get_filename(), 'wb').write(part.get_payload(decode=True))
                     return part.get_filename()
 
 
@@ -64,7 +65,9 @@ class Command(BaseCommand):
             FROM_PWD = "TRIBUS11"  # substitua <suasenha> pela sua senha
             SMTP_SERVER = "imap.gmail.com"  # padrão
             SMTP_PORT = 993  # padrão
-            outputdir = '/tmp/email-test'
+            #outputdir = '/tmp/email-test'
+            outputdir = settings.OUTPUTDIR
+
 
             mail = imaplib.IMAP4_SSL(SMTP_SERVER)
             mail.login(FROM_EMAIL, FROM_PWD)

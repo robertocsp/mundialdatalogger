@@ -16,4 +16,6 @@ DATABASES = {
     }
 }
 
+OUTPUTDIR = '/tmp/email-test'
+
 print('entrou no homologa settings')

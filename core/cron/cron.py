@@ -6,4 +6,4 @@ from datetime import datetime, timedelta
 from django.core.management import call_command
 
 def my_scheduled_job():
-    call_command('carrega-temperaturas')
+    call_command('carrega-temperaturas2')

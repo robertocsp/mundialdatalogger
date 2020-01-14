@@ -17,16 +17,80 @@ from django.template.loader import render_to_string
 import sys
 import csv
 
+class CircuitoListFilter(admin.SimpleListFilter):
+    title = 'Circuitos'
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'circuito'
+
+
+
+    def lookups(self, request, CircuitoAdmin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        circuitos_filtrado = list()
+
+        if request.user.is_superuser:
+            circuitos = models.Circuito.objects.all()
+
+            for circuito in circuitos:
+                circuitos_filtrado.append(
+                    (circuito.id, circuito.nome)
+                )
+        else:
+            circuitos = models.Circuito.objects.filter(loja__user=request.user)
+
+            for circuito in circuitos:
+                circuitos_filtrado.append(
+                    (circuito.id, circuito.nome)
+                )
+
+        return circuitos_filtrado
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        '''
+        if self.value() == '1':
+            return queryset.all()
+        if self.value() == '2':
+            return queryset.all()
+        '''
+        if self.value() != None:
+            circuito = models.Circuito.objects.get(pk=int(self.value()))
+            print(circuito)
+            return queryset.filter(circuito=circuito)
+        else:
+            return queryset.all()
 
 @admin.register(models.Temperatura)
 class TemperaturaAdmin(admin.ModelAdmin):
-    list_display = ('datahora', 'temperatura', 'degelo', 'circuito',)
-    list_filter = [
-        # ('datahora', PastDateRangeFilter),
-        ('datahora', DateRangeFilter),
-        'circuito__nome',
 
-    ]
+    def get_queryset(self, request):
+        qs = super(TemperaturaAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(circuito__loja__user=request.user)
+
+
+
+    list_display = ('datahora', 'temperatura', 'degelo', 'circuito',)
+    list_filter = (
+        ('datahora', DateRangeFilter),
+        #('circuito'),
+        CircuitoListFilter,
+
+    )
+    ordering = ('circuito', )
+
     change_list_template = 'admin/core/temperatura/core_change_list.html'
 
     # list_per_page = sys.maxsize
@@ -126,9 +190,27 @@ class TemperaturaAdmin(admin.ModelAdmin):
 
 @admin.register(models.Circuito)
 class CircuitoAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'posicao_coluna', 'faixa1')
+    list_display = ('id', 'nome', 'posicao_coluna', 'faixa1')
+    list_filter = (
+            ('loja'),
+    )
 
 
 @admin.register(models.Conformidade)
 class ConformidadeAdmin(admin.ModelAdmin):
     list_display = ('nome', 'temp_min', 'temp_max',)
+
+@admin.register(models.Loja)
+class LojaAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        qs = super(LojaAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user=request.user)
+
+    
+    list_display = ('id', 'nome', 'get_users' )
+
+    def get_users(self, obj):
+        return obj.user.all()
+

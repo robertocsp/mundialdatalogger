@@ -1,7 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
+
+class Loja(models.Model):
+    PVPRO2 = 'p'
+    BOSS = 'b'
+
+    DISPOSITIVOS = [
+        (PVPRO2, 'Carel Pv Pro2'),
+        (BOSS, 'Carel Boss'),
+    ]
+
+    #o nome da loja deve ser exatamente a sigla
+    nome = models.CharField(max_length=100)
+    descricao = models.CharField(max_length=255, blank=True, null=True)
+    user = models.ManyToManyField(User, related_name='users')
+    dispositivo = models.CharField(max_length=1, choices=DISPOSITIVOS, default=PVPRO2)
+    ativa = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nome
 
 class Conformidade(models.Model):
     nome = models.CharField(max_length=100)
@@ -11,12 +31,14 @@ class Conformidade(models.Model):
     def __str__(self):
         return self.nome
 
-#class AgendaDegelo(models.Mode):
-
 class Circuito(models.Model):
     nome = models.CharField(max_length=255)
     posicao_coluna = models.IntegerField(null=True, blank=True)
     conformidade = models.ForeignKey(Conformidade, on_delete=models.CASCADE, default=True)
+
+    #Foi colocado o default como 1, pois normalmente o circuito é carregado automaticamente, para confirmar deve-se ver qual o id do dispositivo
+    loja = models.ForeignKey(Loja, on_delete=models.CASCADE, default=1)
+
     faixa1 = models.TimeField(null=True, blank=True)
     faixa2 = models.TimeField(null=True, blank=True)
     faixa3 = models.TimeField(null=True, blank=True)

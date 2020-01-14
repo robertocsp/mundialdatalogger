@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.http import HttpRequest
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +26,4 @@ urlpatterns = [
 admin.site.site_header = "Supermercados Mundial"
 admin.site.site_title = "Supermercados Mundial"
 admin.site.index_title = "Supermercados Mundial"
+

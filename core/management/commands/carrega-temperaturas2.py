@@ -1,9 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 import csv
-from core.models import Temperatura, Circuito
+from core.models import Temperatura, Circuito, Loja
 import imaplib
 import email
 from datetime import datetime, timedelta
+from django.conf import settings
 
 class Command(BaseCommand):
     help = 'Carrega Temperaturas'
@@ -18,7 +19,7 @@ class Command(BaseCommand):
             datahora = ''
             temperaturas = []
             circuitos = []
-            outputdir = '/tmp/email-test/'
+            outputdir = settings.OUTPUTDIR
 
             with open(outputdir + arquivo, 'r', encoding='utf-8') as csvFile:
                 reader = csv.reader(csvFile, delimiter=';')
@@ -36,8 +37,10 @@ class Command(BaseCommand):
             csvFile.close()
             return datahora, temperaturas, circuitos
 
-        def email_ja_lido(email_id):
-            temperatura = Temperatura.objects.filter(id_email=email_id)
+
+
+        def email_ja_lido(email_id, circuito):
+            temperatura = Temperatura.objects.filter(id_email=email_id, circuito__loja=circuito.loja)
             if temperatura.exists():
                 return True
             else:
@@ -55,53 +58,8 @@ class Command(BaseCommand):
                 return
             for part in mail.walk():
                 if part.get_content_maintype() != 'multipart' and part.get('Content-Disposition') is not None:
-                    open(outputdir + '/' + part.get_filename(), 'wb').write(part.get_payload(decode=True))
+                    open(outputdir + part.get_filename(), 'wb').write(part.get_payload(decode=True))
                     return part.get_filename()
-
-
-        def ler_email():
-            FROM_EMAIL = "thermoguardian2.ti@gmail.com"  # substitua <seuemail> pelo seu email.
-            FROM_PWD = "zlwrfdbkzhahzzxu"  # substitua <suasenha> pela sua senha
-            #FROM_EMAIL = "thermoguardian.ti@gmail.com"  # substitua <seuemail> pelo seu email.
-            #FROM_PWD = "TRIBUS11"  # substitua <suasenha> pela sua senha
-            SMTP_SERVER = "imap.gmail.com"  # padrão
-            SMTP_PORT = 993  # padrão
-            outputdir = '/tmp/email-test'
-
-            mail = imaplib.IMAP4_SSL(SMTP_SERVER)
-            mail.login(FROM_EMAIL, FROM_PWD)
-
-            mail.select('inbox', readonly=False)
-
-            status, data = mail.search(None, 'SUBJECT TESTE')
-
-            mail_ids = []
-
-            # pega todos os ids
-            for block in data:
-                mail_ids += block.split()
-
-            #pega o ultimo email e guarda o "id" como count
-            count = 1
-            ultimo_mail_id = ''
-            for i in mail_ids:
-                count += 1
-                ultimo_mail_id = i
-            #ultimo_mail_id = mail_ids[0]
-            print(mail_ids)
-
-            #print('ultimo_mail_id: ' + str(ultimo_mail_id))
-
-            # pega o último elemento
-            #ultimo_mail_id = mail_ids[-1]
-            #lista_enumerada_emails = enumerate(mail_ids)
-
-            status, data = mail.fetch(ultimo_mail_id, '(RFC822)')
-            for response_part in data:
-                if isinstance(response_part, tuple):
-                    message = email.message_from_bytes(response_part[1])
-                    filename = downloaAttachmentsInEmail(mail, ultimo_mail_id, outputdir)
-                    return count, filename
 
         def esta_em_degelo(temperatura):
             tempo_degelo = temperatura.circuito.tempo_degelo
@@ -152,30 +110,43 @@ class Command(BaseCommand):
                 return False
 
 
+        def retorna_email_id_filename(status, data, mail, outputdir):
+            mail_ids = []
 
-        email_id, filename = ler_email()
-        datahora = ''
-        #print(email_id)
-        #email_id_inteiro = int.from_bytes(email_id)
-        print('email_id: ' + str(email_id) + '  ---  ' + str(filename))
+            # pega todos os ids
+            for block in data:
+                mail_ids += block.split()
 
-        if not email_ja_lido(email_id):
+            # pega o ultimo email e guarda o "id" como count
+            count = 1
+            ultimo_mail_id = ''
+            for i in mail_ids:
+                count += 1
+                ultimo_mail_id = i
 
+            status, data = mail.fetch(ultimo_mail_id, '(RFC822)')
+            for response_part in data:
+                if isinstance(response_part, tuple):
+                    message = email.message_from_bytes(response_part[1])
+                    filename = downloaAttachmentsInEmail(mail, ultimo_mail_id, outputdir)
+                    return count, filename
+
+        def grava_temperaturas(filename, email_id, circuito_referencia):
             datahora, temperaturas, circuitos = retorna_circuito_temperatura(filename)
-            #print(temperaturas)
+            # print(temperaturas)
 
-            #print('email não lido ainda: ' + str(email_id))
+            # print('email não lido ainda: ' + str(email_id))
             for idx, c in enumerate(temperaturas, start=1):
                 if (str(c).strip()) != '':
-                    #print(str(c).replace(',', '.'))
+                    # print(str(c).replace(',', '.'))
                     temperatura = Temperatura()
                     try:
                         temperatura.temperatura = float(str(c).replace(',', '.'))
                     except:
                         temperatura.temperatura = -999.99
                     temperatura.id_email = email_id
-                    #circuito = Circuito.objects.filter(nome__contains=circuitos[idx]).first()
-                    circuito = Circuito.objects.get(posicao_coluna=idx)
+                    #tem que informar qual é a loja
+                    circuito = Circuito.objects.get(posicao_coluna=idx, loja=circuito_referencia.loja)
                     temperatura.circuito = circuito
                     temperatura.arquivo = filename
                     temperatura.datahora = datetime.strptime(datahora, '%Y-%m-%d %H:%M')
@@ -184,13 +155,49 @@ class Command(BaseCommand):
                         temperatura.temperatura = None
                     else:
                         temperatura.degelo = None
-                    #temperatura.save()
-                    print(temperatura.datahora)
-                    #print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
-        else:
-            print('email de id: ' + str(email_id) + ' já lido')
+                    temperatura.save()
+                    # print(temperatura.datahora)
+                    # print('a temperatura do circuito ' + circuito.nome + ' é: ' + str(temperatura.temperatura))
+
+        def ler_emails():
+            FROM_EMAIL = "thermoguardian2.ti@gmail.com"  # substitua <seuemail> pelo seu email.
+            FROM_PWD = "TRIBUS11"  # substitua <suasenha> pela sua senha
+            SMTP_SERVER = "imap.gmail.com"  # padrão
+            SMTP_PORT = 993  # padrão
+            #outputdir = '/tmp/email-test'
+            outputdir = settings.OUTPUTDIR
 
 
+            mail = imaplib.IMAP4_SSL(SMTP_SERVER)
+            mail.login(FROM_EMAIL, FROM_PWD)
+
+            mail.select('inbox', readonly=False)
 
 
+            #mdl20
+            circuito_mdl20 = Circuito.objects.filter(loja__nome='mdl20').first()
+            #print(circuito)
+            status, data = mail.search(None, 'SUBJECT TESTE')
+            email_id, filename = retorna_email_id_filename(status, data, mail, outputdir)
 
+            if not email_ja_lido(email_id, circuito_mdl20):
+                grava_temperaturas(filename, email_id, circuito_mdl20)
+                #print('email nao lido')
+            else:
+                print('MDL20 -> email de id: ' + str(email_id) + ' já lido')
+
+
+            #mdl03
+            circuito_mdl03 = Circuito.objects.filter(loja__nome='mdl03').first()
+            #print(circuito_mdl03)
+            status, data = mail.search(None, 'SUBJECT MDL03TEMP')
+            email_id, filename = retorna_email_id_filename(status, data, mail, outputdir)
+
+            if not email_ja_lido(email_id, circuito_mdl03):
+                grava_temperaturas(filename, email_id, circuito_mdl03)
+                #print('email nao lido')
+            else:
+                print('MDL03 -> email de id: ' + str(email_id) + ' já lido')
+
+
+        ler_emails()
